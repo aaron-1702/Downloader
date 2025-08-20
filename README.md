@@ -79,9 +79,11 @@ Downloader-main/
 │       └── cookies.txt # Your browser cookies file (manually added)
 ├── templates/
 │   └── index.html     # The web interface
-├── video_downloader.py # The main application script
+├── downloader_app.py   # Desktop application version (PyWebView)
+├── video_downloader.py   # The main application script
 ├── requirements.txt    # Python dependency list
 ├── setup.ps1          # Automated Windows setup script
+├── start_app.bat       # Batch file to launch desktop app
 └── README.md          # This file
 ```
 ## Supported Services
