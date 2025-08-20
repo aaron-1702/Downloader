@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('/static/Crypto.png') no-repeat center center fixed;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+            min-height: 100vh;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+        
+        #content {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        
+        select, button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        #progress {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        #status {
+            margin-top: 10px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Video & Music Downloader</h1>
+        <form id="downloadForm">
+            <textarea name="urls" placeholder="Paste one or more URLs (each on a new line)" rows="6" required></textarea>
+            <br>
+            <select name="type">
+                <option value="mp4">MP4 (Video)</option>
+                <option value="mp3">MP3 (Audio)</option>
+            </select>
+            <button type="submit">Start Download</button>
+        </form>
+        <div id="progress">Progress: Waiting...</div>
+        <div id="status"></div>
+    </div>
+    <script>
+        const form = document.getElementById('downloadForm');
+        const progressDiv = document.getElementById('progress');
+        const statusDiv = document.getElementById('status');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            statusDiv.innerHTML = "⏳ Download started...";
+            progressDiv.innerHTML = "Progress: 0%";
+
+            const formData = new FormData(form);
+            fetch('/download', { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(data => {
+                    statusDiv.innerHTML = data.message;
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = "Error: " + error.message;
+                });
+
+            // Poll progress every 2 seconds
+            const progressInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('/progress');
+                    const data = await res.json();
+
+                    if (Object.keys(data).length > 0) {
+                        let html = "";
+                        for (const [id, info] of Object.entries(data)) {
+                            if (info.status === "downloading") {
+                                html += `<div>🎬 <b>${info.title}</b> → ${info.progress} @ ${info.speed}, ETA: ${info.eta}</div>`;
+                            } else if (info.status === "finished") {
+                                html += `<div>✅ <b>${info.title}</b> → Finished!</div>`;
+                            }
+                            else if (info.status === "retry") {
+                                html += `<div>🔄 ${info.message}</div>`;
+                            }
+                        }
+                        progressDiv.innerHTML = html;
+                    }
+                } catch (error) {
+                    console.error("Progress check failed:", error);
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>
