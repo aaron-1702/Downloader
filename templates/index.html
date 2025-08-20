@@ -4,64 +4,143 @@
     <title>Multi Downloader</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
-            background: url('/static/Background.png') no-repeat center center fixed;
-            background-attachment: fixed;
-            background-size: 100% 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex; 
-            justify-content: center; 
+            display: flex;
+            justify-content: center;
             align-items: center;
         }
         
         #content {
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 20px;
-            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.92);
+            padding: 30px;
+            border-radius: 15px;
             max-width: 800px;
             width: 90%;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
         }
         
         h1 {
             color: #2c3e50;
             text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
         }
         
         textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             box-sizing: border-box;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+            background-color: rgba(255, 255, 255, 0.9);
         }
         
-        select, button {
-            padding: 10px 15px;
+        /* Radio buttons styling - ALL IN ONE ROW */
+        .radio-container {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: 500;
+            white-space: nowrap;
+            flex: 1;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .radio-item:hover {
+            background: linear-gradient(45deg, #e3f2fd, #bbdefb);
+            border-color: #3498db;
+        }
+
+        .radio-item.selected {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border-color: #2980b9;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 8px;
+            accent-color: #3498db;
+        }
+
+        /* Download Button - Purple gradient */
+        .download-button {
+            padding: 12px 30px;
             border: none;
-            border-radius: 4px;
-            background-color: #3498db;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
             color: white;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-left: 15px;
+            white-space: nowrap;
         }
-        
-        button:hover {
-            background-color: #2980b9;
+
+        /* Hover effects */
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Focus effects */
+        .radio-item:focus, .download-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Button container for centering */
+        .button-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: nowrap;
         }
         
         #progress {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #27ae60;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: rgba(248, 249, 250, 0.9);
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
         }
         
         #status {
-            margin-top: 10px;
-            color: #7f8c8d;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(227, 242, 253, 0.9);
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
         }
     </style>
 </head>
@@ -70,12 +149,24 @@
         <h1>Video & Music Downloader</h1>
         <form id="downloadForm">
             <textarea name="urls" placeholder="Paste one or more URLs (each on a new line)" rows="6" required></textarea>
-            <br>
-            <select name="type">
-                <option value="mp4">MP4 (Video)</option>
-                <option value="mp3">MP3 (Audio)</option>
-            </select>
-            <button type="submit">Start Download</button>
+            
+            <!-- ALL BUTTONS IN ONE ROW -->
+            <div class="button-row">
+                <!-- Format selection -->
+                <div class="radio-container">
+                    <label class="radio-item">
+                        <input type="radio" name="type" value="mp4" checked>
+                        MP4 (Video)
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="type" value="mp3">
+                        MP3 (Audio)
+                    </label>
+                </div>
+                
+                <!-- Download button -->
+                <button type="submit" class="download-button">Start Download</button>
+            </div>
         </form>
         <div id="progress">Progress: Waiting...</div>
         <div id="status"></div>
@@ -84,6 +175,21 @@
         const form = document.getElementById('downloadForm');
         const progressDiv = document.getElementById('progress');
         const statusDiv = document.getElementById('status');
+
+        // Radio button selection styling
+        document.querySelectorAll('.radio-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove selected class from all items
+                document.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
+                // Add selected class to clicked item
+                this.classList.add('selected');
+                // Check the radio button
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        // Initialize selected state
+        document.querySelector('.radio-item:has(input:checked)').classList.add('selected');
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -128,5 +234,4 @@
         });
     </script>
 </body>
-
 </html>
