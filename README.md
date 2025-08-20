@@ -44,7 +44,9 @@ ffmpeg -version
 ## Save your Cookies
 To access certain data, export cookies from your browser using an extension and save them as `cookies.txt` in the appropriate folder (`Downloads/Cookies/` relative to the script).
 
-## Usage
+## Usage 
+
+### Website
 
 1.  Ensure the setup is complete and your `cookies.txt` file is in place.
 2.  Run the application:
@@ -55,6 +57,14 @@ To access certain data, export cookies from your browser using an extension and 
 4.  Paste one or more URLs into the textbox (one per line).
 5.  Select either **MP4 (Video)** or **MP3 (Audio)**.
 6.  Click **"Start Download"**. The progress will be shown on the page.
+
+### Desktop-Application
+
+1. Double-click on `start_app.bat`
+- The application opens immediately as a standalone window
+- Works exactly the same as the web version
+
+
 
 ## Folder Structure
 All downloaded files and cookies are stored inside subfolders of the project directory:
