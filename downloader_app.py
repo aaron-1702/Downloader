@@ -7,16 +7,16 @@ import time
 from flask import Flask, request, jsonify
 import yt_dlp
 
-# Flask Server für die Backend-Funktionen
+# Flask Server for Backend-Functions
 app = Flask(__name__)
 
-# Pfade
+# Paths
 base_dir = os.path.dirname(os.path.abspath(__file__))
 download_path_video = os.path.join(base_dir, 'Downloads', 'Videos')
 download_path_music = os.path.join(base_dir, 'Downloads', 'Music')
 cookie_file = os.path.join(base_dir, 'Downloads', 'Cookies', 'cookies.txt')
 
-# Fortschrittsdaten
+# Progress Data
 progress_data = {}
 
 def create_directory(path):
@@ -54,7 +54,7 @@ def run_download(ydl_opts, url):
 
 @app.route('/')
 def index():
-    # HTML von Ihrer index.html Datei einbinden
+    # Include HTML Data from your index.html file
     html_path = os.path.join(base_dir, 'templates', 'index.html')
     with open(html_path, 'r', encoding='utf-8') as f:
         return f.read()
@@ -65,7 +65,7 @@ def download():
     download_type = request.form['type']
 
     try:
-        # Verzeichnisse erstellen
+        # Create directorys
         create_directory(base_dir)
         cookie_dir = os.path.dirname(cookie_file)
         create_directory(cookie_dir)
@@ -78,13 +78,13 @@ def download():
             if not url:
                 continue
 
-            # Spotify separat behandeln
+            # Treat Spotify separately
             if "spotify.com" in url:
                 create_directory(download_path_music)
                 subprocess.run(["spotdl", url, "--output", download_path_music], check=True)
                 continue
 
-            # YouTube / andere
+            # YouTube / outhers
             if download_type == 'mp4':
                 create_directory(download_path_video)
                 ydl_opts = {
@@ -132,12 +132,12 @@ def run_server():
     app.run(port=5000, debug=False, threaded=True)
 
 if __name__ == '__main__':
-    # Server im Hintergrund starten
+    # Start server in background
     server_thread = threading.Thread(target=run_server)
     server_thread.daemon = True
     server_thread.start()
 
-    # Desktop App erstellen
+    # Created Desktop App
     window = webview.create_window(
         'Video & Music Downloader',
         'http://127.0.0.1:5000',
