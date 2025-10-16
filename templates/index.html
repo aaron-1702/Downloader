@@ -4,7 +4,6 @@
     <title>Multi Downloader</title>
     <style>
         body {
-
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
@@ -19,8 +18,8 @@
             background-color: rgba(255, 255, 255, 0.92);
             padding: 30px;
             border-radius: 15px;
-            max-width: 800px;
-            width: 90%;
+            max-width: 950px;
+            width: 95%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             backdrop-filter: blur(5px);
         }
@@ -33,20 +32,77 @@
             text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
         }
         
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .input-section {
+            flex: 1;
+            display: flex;
+            gap: 15px;
+        }
+        
         textarea {
-            width: 100%;
+            flex: 1;
             padding: 15px;
             border: 2px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
-            margin-bottom: 20px;
             font-size: 14px;
             resize: vertical;
             min-height: 120px;
             background-color: rgba(255, 255, 255, 0.9);
         }
         
-        /* Radio buttons styling - ALL IN ONE ROW */
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        /* Vertical Folder Buttons */
+        .folder-buttons-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .folder-btn-vertical {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-width: 80px;
+        }
+        
+        .folder-btn-vertical:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            background: linear-gradient(45deg, #229954, #27ae60);
+        }
+        
+        .folder-btn-vertical .icon {
+            font-size: 18px;
+        }
+        
+        .folder-btn-vertical .text {
+            font-size: 12px;
+        }
+        
+        /* Radio buttons styling */
         .radio-container {
             display: flex;
             gap: 15px;
@@ -89,7 +145,7 @@
             accent-color: #3498db;
         }
 
-        /* Download Button - Purple gradient */
+        /* Download Button */
         .download-button {
             padding: 12px 30px;
             border: none;
@@ -101,30 +157,22 @@
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-left: 15px;
             white-space: nowrap;
         }
 
-        /* Hover effects */
         .download-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
-        /* Focus effects */
-        .radio-item:focus, .download-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-        }
-
-        /* Button container for centering */
+        /* Button container */
         .button-row {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
             margin: 25px 0;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
         }
         
         #progress {
@@ -141,6 +189,35 @@
             background-color: rgba(227, 242, 253, 0.9);
             border-radius: 8px;
             border-left: 4px solid #2196f3;
+            transition: all 0.3s ease;
+        }
+
+        /* Progress items with folder links */
+        .progress-item {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .progress-info {
+            flex: 1;
+        }
+
+        .folder-link {
+            margin-left: 15px;
+            padding: 5px 10px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .folder-link:hover {
+            background: #229954;
         }
     </style>
 </head>
@@ -148,11 +225,26 @@
     <div id="content">
         <h1>Video & Music Downloader</h1>
         <form id="downloadForm">
-            <textarea name="urls" placeholder="Paste one or more URLs (each on a new line)" rows="6" required></textarea>
+            <div class="main-layout">
+                <div class="input-section">
+                    <textarea name="urls" placeholder="Paste one or more URLs (each on a new line)" rows="8" required></textarea>
+                    
+                    <div class="quick-actions">
+                        <div class="folder-buttons-vertical">
+                            <button type="button" class="folder-btn-vertical" onclick="openFolder('videos')" title="Videos Ordner öffnen">
+                                <span class="icon">📁</span>
+                                <span class="text">Videos</span>
+                            </button>
+                            <button type="button" class="folder-btn-vertical" onclick="openFolder('music')" title="Music Ordner öffnen">
+                                <span class="icon">📁</span>
+                                <span class="text">Music</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            <!-- ALL BUTTONS IN ONE ROW -->
             <div class="button-row">
-                <!-- Format selection -->
                 <div class="radio-container">
                     <label class="radio-item">
                         <input type="radio" name="type" value="mp4" checked>
@@ -164,11 +256,10 @@
                     </label>
                 </div>
                 
-                <!-- Download button -->
                 <button type="submit" class="download-button">Start Download</button>
             </div>
         </form>
-        <div id="progress">Progress: Waiting...</div>
+        <div id="progress">Progress: Waiting for download...</div>
         <div id="status"></div>
     </div>
     <script>
@@ -179,11 +270,8 @@
         // Radio button selection styling
         document.querySelectorAll('.radio-item').forEach(item => {
             item.addEventListener('click', function() {
-                // Remove selected class from all items
                 document.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
-                // Add selected class to clicked item
                 this.classList.add('selected');
-                // Check the radio button
                 this.querySelector('input[type="radio"]').checked = true;
             });
         });
@@ -191,10 +279,37 @@
         // Initialize selected state
         document.querySelector('.radio-item:has(input:checked)').classList.add('selected');
 
+        // Function to open folder
+        function openFolder(type) {
+            fetch(`/open_folder?type=${type}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        showStatus(`📁 ${type === 'videos' ? 'Videos' : 'Music'} Ordner geöffnet`, 'success');
+                    } else {
+                        showStatus(`Error: ${data.message}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    showStatus(`Error: ${error.message}`, 'error');
+                });
+        }
+
+        // Helper function to show status messages
+        function showStatus(message, type) {
+            statusDiv.innerHTML = message;
+            statusDiv.style.backgroundColor = type === 'success' 
+                ? 'rgba(39, 174, 96, 0.1)' 
+                : 'rgba(231, 76, 60, 0.1)';
+            statusDiv.style.borderLeftColor = type === 'success' 
+                ? '#27ae60' 
+                : '#e74c3c';
+        }
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            statusDiv.innerHTML = "⏳ Download started...";
+            statusDiv.innerHTML = "⏳ Download gestartet...";
             progressDiv.innerHTML = "Progress: 0%";
 
             const formData = new FormData(form);
@@ -217,12 +332,15 @@
                         let html = "";
                         for (const [id, info] of Object.entries(data)) {
                             if (info.status === "downloading") {
-                                html += `<div>🎬 <b>${info.title}</b> → ${info.progress} @ ${info.speed}, ETA: ${info.eta}</div>`;
+                                html += `<div class="progress-item">
+                                    <div class="progress-info">🎬 <b>${info.title}</b> → ${info.progress} @ ${info.speed}, ETA: ${info.eta}</div>
+                                </div>`;
                             } else if (info.status === "finished") {
-                                html += `<div>✅ <b>${info.title}</b> → Finished!</div>`;
-                            }
-                            else if (info.status === "retry") {
-                                html += `<div>🔄 ${info.message}</div>`;
+                                const folderType = document.querySelector('input[name="type"]:checked').value === 'mp4' ? 'videos' : 'music';
+                                html += `<div class="progress-item">
+                                    <div class="progress-info">✅ <b>${info.title}</b> → Fertig!</div>
+                                    <a href="#" class="folder-link" onclick="openFolder('${folderType}'); return false;">Ordner öffnen</a>
+                                </div>`;
                             }
                         }
                         progressDiv.innerHTML = html;

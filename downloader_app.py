@@ -128,6 +128,31 @@ def progress():
     }
     return jsonify(active)
 
+@app.route('/open_folder')
+def open_folder():
+    import platform
+    import subprocess
+    
+    folder_type = request.args.get('type', 'videos')  # 'videos' oder 'music'
+    
+    if folder_type == 'videos':
+        folder_path = download_path_video
+    else:
+        folder_path = download_path_music
+    
+    # Ordner öffnen je nach Betriebssystem
+    try:
+        if platform.system() == "Windows":
+            os.startfile(folder_path)
+        elif platform.system() == "Darwin":  # macOS
+            subprocess.Popen(["open", folder_path])
+        else:  # Linux
+            subprocess.Popen(["xdg-open", folder_path])
+        
+        return jsonify({"status": "success", "message": f"Folder opened: {folder_path}"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 def run_server():
     app.run(port=5000, debug=False, threaded=True)
 
