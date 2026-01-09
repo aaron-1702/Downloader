@@ -38,7 +38,7 @@ if (scoop list ffmpeg -e) {
 # Install Python dependencies
 Write-Host "Installing required Python libraries (Flask, yt-dlp, spotdl)..." -ForegroundColor Yellow
 try {
-    pip install -r requirements.txt
+    pip install -U -r requirements.txt
     Write-Host "✅ Python libraries installed successfully." -ForegroundColor Green
 } catch {
     Write-Host "❌ Failed to install Python libraries. Error: $_" -ForegroundColor Red
